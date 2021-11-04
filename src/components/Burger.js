@@ -14,14 +14,24 @@ class Burger extends React.Component {
 
   loadIngredients() {
     return Object.keys(this.state).map((ingredient, index) => 
-      <>
+      <div key ={ingredient} >
         <p>{ingredient}</p>
-        <div className="ingrBtns">
-          <button className="ingrBtn" onClick={() => this.addRemoveIngredient('add', ingredient)}>Add</button>
-          <button className="ingrBtn" onClick={() => this.addRemoveIngredient('remove',ingredient)}>Remove</button>
+        <div className="ingr-btns">
+          <button className="ingr-btn" onClick={() => this.addRemoveIngredient("add", ingredient)}>Add</button>
+          <button className="ingr-btn" onClick={() => this.addRemoveIngredient("remove",ingredient)}>Remove</button>
         </div>
-      </>
+      </div>
     )
+  }
+
+  ingredientContent(ingredientCount, ingredientClassName, burgerStackLength) {
+    let ingredientStack = []
+
+    for (let i = 0; i < ingredientCount; i++) {
+      ingredientStack.push(<div key={burgerStackLength + i} className={ingredientClassName}></div>);
+    }
+
+    return ingredientStack
   }
 
   burgerContent() {
@@ -32,28 +42,17 @@ class Burger extends React.Component {
       meat
     } = this.state;
 
-    let burger = [];
+    let burgerStack = [];
+    
+    burgerStack = burgerStack.concat(this.ingredientContent(lettuce, "lettuce-side", burgerStack.length))
+    burgerStack = burgerStack.concat(this.ingredientContent(tomato, "tomato-side", burgerStack.length))
+    burgerStack = burgerStack.concat(this.ingredientContent(cheese, "cheese-side", burgerStack.length))
+    burgerStack = burgerStack.concat(this.ingredientContent(meat, "meat-side", burgerStack.length))
 
-    for (let i = 0; i < lettuce; i++){
-      burger.push(<div key={burger.length} className="lettuceSide"></div>);
-    }
+    if(burgerStack.length === 0)
+      burgerStack.push(<p key="0">Please start adding ingredients!</p>);
 
-    for (let i = 0; i < tomato; i++){
-      burger.push(<div key={burger.length} className="tomatoSide"></div>);
-    }
-
-    for (let i = 0; i < cheese; i++){
-      burger.push(<div key={burger.length} className="cheeseSide"></div>);
-    }
-
-    for (let i = 0; i < meat; i++){
-      burger.push(<div key={burger.length} className="meatSide"></div>);
-    }
-
-    if(burger.length === 0)
-      burger.push(<p key="0">Please start adding ingredients!</p>);
-
-    return burger;
+    return burgerStack;
   }
 
   addRemoveIngredient = (action, ingredient) => {
@@ -65,31 +64,33 @@ class Burger extends React.Component {
     } = this.state;
 
     let stateValue;
-    switch(ingredient){
-      case 'lettuce':{
+    switch(ingredient) {
+      case 'lettuce': {
         stateValue = lettuce;
         break;
       }
-      case 'tomato':{
+      case 'tomato': {
         stateValue = tomato;
         break;
       }
-      case 'cheese':{
+      case 'cheese': {
         stateValue = cheese;
         break;
       }
-      case 'meat':{
+      case 'meat': {
         stateValue = meat;
         break;
       }
       default: break;
     }
 
-    if(action === 'add'){
-      stateValue = stateValue + 1;
-    }else{
-      stateValue = stateValue - 1;
+    if(action === 'add') {
+      stateValue++;
     }
+    else {
+      stateValue--;
+    }
+
     this.setState({
       [ingredient]: stateValue >= 0 ? stateValue : 0
     });
@@ -98,15 +99,15 @@ class Burger extends React.Component {
   render() {
     return (
       <>
-        <div className="burgerDisplay">
-          <div className="topSide"></div>
+        <div className="burger-display">
+          <div className="top-side"></div>
           {this.burgerContent()}
-          <div className="bottomSide"></div>
+          <div className="bottom-side"></div>
         </div>
-        <div className="restaurantName">
+        <div className="restaurant-name">
           Mohit's Burger Joint
         </div>
-        <div className="ingredientChoices">
+        <div className="ingredient-choices">
           {this.loadIngredients()}
         </div>
       </>

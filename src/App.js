@@ -4,7 +4,7 @@ import Burger from './components/Burger';
 
 function App() {
   return (
-    <div className="burgerContent">
+    <div className="burger-content">
       <Burger />
     </div>
   );
